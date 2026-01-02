@@ -2,13 +2,21 @@ import re
 import tkinter as tk
 
 def append_value(value):
-    """Helper function to convert certain button values to their string representation."""
+    """non digits get surrounded by spaces"""
     pattern = r'[0-9]' # Matches any single digit
     return str(value) if re.match(pattern, str(value)) else " " + str(value) + " "
-
+def pretty_value_to_eval(display_var):
+    display_var.set(display_var.get().replace('^', '**'))
+    display_var.set(display_var.get().replace(' ', ''))
+    return display_var
 def on_button_click(value, display_var):
-    """Function called when the button is clicked."""
     match value:
+        case 'x^y':
+            display_var.set(display_var.get() + append_value('^'))
+        case 'EXP':
+            display_var.set(display_var.get() + append_value('e'))
+        case '(x)':
+                display_var.set('(' + display_var.get() + ')')
         case 'C':
             display_var.set("")
         case 'Del':
@@ -16,7 +24,8 @@ def on_button_click(value, display_var):
             display_var.set(current[:-1])
         case '=':
             try:
-                result = str(eval(display_var.get()))
+                parsed_value = pretty_value_to_eval(display_var)
+                result = str(eval(parsed_value.get()))
                 display_var.set(result)
             except Exception:
                 display_var.set("Error")
