@@ -1,36 +1,6 @@
-import re
 import tkinter as tk
+from logic import on_button_click, append_value, pretty_value_to_eval
 
-def append_value(value):
-    """non digits get surrounded by spaces"""
-    pattern = r'[0-9]' # Matches any single digit
-    return str(value) if re.match(pattern, str(value)) else " " + str(value) + " "
-def pretty_value_to_eval(display_var):
-    display_var.set(display_var.get().replace('^', '**'))
-    display_var.set(display_var.get().replace(' ', ''))
-    return display_var
-def on_button_click(value, display_var):
-    match value:
-        case 'x^y':
-            display_var.set(display_var.get() + append_value('^'))
-        case 'EXP':
-            display_var.set(display_var.get() + append_value('e'))
-        case '(x)':
-                display_var.set('(' + display_var.get() + ')')
-        case 'C':
-            display_var.set("")
-        case 'Del':
-            current = display_var.get()
-            display_var.set(current[:-1])
-        case '=':
-            try:
-                parsed_value = pretty_value_to_eval(display_var)
-                result = str(eval(parsed_value.get()))
-                display_var.set(result)
-            except Exception:
-                display_var.set("Error")
-        case _:
-            display_var.set(display_var.get() + append_value(value))
 def create_ui():
     root = tk.Tk()
 
@@ -87,7 +57,7 @@ def create_ui():
     button_delete = tk.Button(root, text="Del", command=lambda: on_button_click('Del', display_var))
     button_smart_parentheses = tk.Button(root, text="(x)", command=lambda: on_button_click('(x)', display_var))
     button_open_paren = tk.Button(root, text="(", command=lambda: on_button_click('(', display_var))
-    button_close_paren = tk.Button(root, text=")", command=lambda: on_button_click(',', display_var))
+    button_close_paren = tk.Button(root, text=")", command=lambda: on_button_click(')', display_var))
     button_raise = tk.Button(root, text="x^y", command=lambda: on_button_click('x^y', display_var))
 
     # Place widgets using grid()
